@@ -15,3 +15,6 @@ input {
   font-size: 1em;
   padding: 0.5em;
 }
+input[type=button] {
+  background-color: lightGreen;
+}
