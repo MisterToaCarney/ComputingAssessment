@@ -18,3 +18,8 @@ input {
 input[type=button] {
   background-color: lightGreen;
 }
+
+p.error {
+  color: red;
+  font-size: 0.8em;
+}

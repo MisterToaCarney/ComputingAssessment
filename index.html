@@ -7,10 +7,13 @@
   <form action="http://forms.flexfm.org/" method="post">
     <label>First Name:</label>
     <input type="text" id="firstName">
+    <p class="error" id="firstNameError"></p>
     <label>Last Name:</label>
     <input type="text" id="lastName">
+    <p class="error" id="lastNameError"></p>
     <label>Age</label>
     <input type="number" min="16" max="65" id="age">
+    <p class="error" id="ageError"></p>
     <input type="button" value="Add Person" onclick="getValues()">
   </form>
   <script src="script.js" type="text/javascript"></script>
