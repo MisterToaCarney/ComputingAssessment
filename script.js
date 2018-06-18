@@ -22,7 +22,7 @@ function getValues() { //Function for getting the values from the form (and also
 
   switch (verify(firstName, 'name')) { // Verify that firstName is a valid name
     case 0: // Is valid
-      firstNameElement.style.borderColor = "initial"
+      firstNameElement.style.borderColor = null;
       break;
     case 1: // Is invalid (name is empty)
       firstNameElement.style.borderColor = "red";
@@ -30,11 +30,37 @@ function getValues() { //Function for getting the values from the form (and also
     case 3: // Is invalid (name is too long)
       firstNameElement.style.borderColor = "red";
       break;
-
+    default:
+      console.error("Fatal: Invalid error code")
   }
-  
-  verify(lastName, 'name'); //TODO: put these in switch statements
-  verify(age, 'age');
+
+  switch (verify(lastName, 'name')) { // Verify that lastName is a valid name
+    case 0: // Is valid
+      lastNameElement.style.borderColor = null;
+      break;
+    case 1: // Is empty
+      lastNameElement.style.borderColor = "red";
+      break;
+    case 3: // Is too long
+      lastNameElement.style.borderColor = "red";
+      break;
+    default:
+      console.error("Fatal: Invalid error code");
+  }
+
+  switch (verify(age, 'age')) { // Verify that age is a valid age
+    case 0: // Is valid
+      ageElement.style.borderColor = null;
+      break;
+    case 2:
+      ageElement.style.borderColor = "red";
+      break;
+    case 3:
+      ageElement.style.borderColor = "red";
+      break;
+    default:
+      console.error("Fatal: Invalid error code");
+  }
 
   firstNames.push(firstName); // Push the values to the array
   lastNames.push(lastName);   // TODO: Push the values only when they have been verified (when they are valid)
@@ -47,14 +73,14 @@ function verify(subject, type) {
       if (subject.length == 0) {
         return(1); //error code 1: No content
       }
-      else if(subject.length > 50) {
+      else if(subject.length > 150) {
         return(3); //error code 3: Over boundary
       }
       else {
         return(0); //return 0 if okay
       }
       break;
-    
+
     case 'age':
       if (subject < 16) {
         return(2); //error code 2: Under boundary (age too low)
