@@ -23,3 +23,11 @@ p.error {
   color: red;
   font-size: 0.8em;
 }
+td, th {
+  border: 2px solid red;
+  text-align: center;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
