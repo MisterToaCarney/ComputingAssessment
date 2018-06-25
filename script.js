@@ -107,6 +107,7 @@ function getValues() { //Function for getting the values from the form (and also
     firstNames.push(firstName); // Push the values to the array
     lastNames.push(lastName);
     ages.push(age);
+    drawTable();
   }
 }
 
@@ -183,10 +184,38 @@ function drawTable() {
   Cell 2: Ages
   Cell 3: Has health issues
   */
+
+
+
   var root = document.getElementById("outputTable");
-  var
-  for (var i = 0; i < root.rows.length; i++) {
-    root.rows[i]
+
+  recursions = root.rows.length; // Clear the table
+  for (var i = 0; i < recursions; i++) {
+    if (i != 0) {
+      root.deleteRow(1)
+    }
+  }
+
+  for (var i = 0; i < firstNames.length; i++) {
+    var row = root.insertRow();
+
+    var personCell = row.insertCell(0);
+    personCell.innerHTML = i+1;
+
+    var nameCell = row.insertCell(1);
+    nameCell.innerHTML = firstNames[i] + " " + lastNames[i];
+
+    var ageCell = row.insertCell(2);
+    ageCell.innerHTML = ages[i];
+
+    var hasHealthIssuesCell = row.insertCell(3);
+    if (hasHealthIssues[i] == true) {
+      hasHealthIssuesCell.innerHTML = "Yes";
+    }
+    else {
+      hasHealthIssuesCell.innerHTML = "No";
+    }
+
   }
 }
 
