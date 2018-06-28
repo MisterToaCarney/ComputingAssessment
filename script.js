@@ -17,6 +17,7 @@ List of costs:
 */
 
 const inputs = ['firstName', 'lastName', 'age']; // IDs of all form inputs
+const radios = ['radioNo', "radioYes"]
 const errors = ['firstNameError', 'lastNameError', 'ageError'];
 
 const maxPeople = 20; //Define a maximum of 20 people.
@@ -25,6 +26,8 @@ const maxPeople = 20; //Define a maximum of 20 people.
 var firstNameElement = document.getElementById(inputs[0]) //Get all the form elements and store them in variables
 var lastNameElement = document.getElementById(inputs[1])
 var ageElement = document.getElementById(inputs[2])
+var radioNoElement = document.getElementById(radios[0])
+var radioYesElement = document.getElementById(radios[1]);
 
 var firstNameError = document.getElementById(errors[0]);
 var lastNameError = document.getElementById(errors[1]);
@@ -39,6 +42,16 @@ function getValues() { //Function for getting the values from the form (and also
   firstName = firstNameElement.value; // Get the values and store them
   lastName = lastNameElement.value;
   age = ageElement.value;
+  if (radioYesElement.checked == true && radioNoElement.checked == false) {
+    healthIssue = true;
+  }
+  else if (radioYesElement.checked == false && radioNoElement.checked == true) {
+    healthIssue = false;
+  }
+  else {
+    alert("An error occured. Check the console for details.")
+    console.error("Health issue radio buttons are not set")
+  }
 
   var isValid = true;
 
@@ -103,11 +116,14 @@ function getValues() { //Function for getting the values from the form (and also
     default:
       console.error("Fatal: Invalid error code");
   }
+  //no need to check if health issues are valid as the value is set by the software and not the user.
   if (isValid == true) {
     firstNames.push(firstName); // Push the values to the array
     lastNames.push(lastName);
     ages.push(age);
+    hasHealthIssues.push(healthIssue);
     drawTable();
+    clearAllInputs();
   }
 }
 
@@ -223,4 +239,6 @@ function clearAllInputs() {
   for (var i = 0; i < inputs.length; i++) {
     document.getElementById(inputs[i]).value = "";
   }
+  document.getElementById(radios[0]).checked = true;
+  document.getElementById(radios[1]).checked = false;
 }
