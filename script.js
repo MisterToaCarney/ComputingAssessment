@@ -17,7 +17,7 @@ List of costs:
 */
 
 const inputs = ['firstName', 'lastName', 'age']; // IDs of all form inputs
-const radios = ['radioNo', "radioYes"]
+const radios = ['radioNo', 'radioYes']
 const errors = ['firstNameError', 'lastNameError', 'ageError'];
 
 const maxPeople = 20; //Define a maximum of 20 people.
@@ -37,8 +37,13 @@ var firstNames = []; //Create empty arrays
 var lastNames = [];
 var ages = [];
 var hasHealthIssues = [];
+var costs = [];
 
 function getValues() { //Function for getting the values from the form (and also checking and storing them)
+  if (firstNames.length >= maxPeople) {
+    alert("You can't exceed " + maxPeople + " people per booking.")
+    return(1);
+  }
   firstName = firstNameElement.value; // Get the values and store them
   lastName = lastNameElement.value;
   age = ageElement.value;
@@ -49,8 +54,9 @@ function getValues() { //Function for getting the values from the form (and also
     healthIssue = false;
   }
   else {
-    alert("An error occured. Check the console for details.")
     console.error("Health issue radio buttons are not set")
+    alert("An error occured. Check the console for details.")
+    return(1);
   }
 
   var isValid = true;
@@ -72,6 +78,8 @@ function getValues() { //Function for getting the values from the form (and also
       break;
     default:
       console.error("Fatal: Invalid error code")
+      alert("An error has occured. Check the conosle for details.")
+      isValid = false;
   }
 
   switch (verify(lastName, 'name')) { // Verify that lastName is a valid name
@@ -91,9 +99,11 @@ function getValues() { //Function for getting the values from the form (and also
       break;
     default:
       console.error("Fatal: Invalid error code");
+      alert("An error has occured. Check the conosle for details.")
+      isValid = false;
   }
 
-  switch (verify(age, 'age')) { // Verify that age is a valid age
+  switch (verify(age, 'age')) { // Verify that the age variable is a valid age
     case 0: // Is valid
       ageElement.style.borderColor = null;
       ageError.innerHTML = null;
@@ -115,6 +125,8 @@ function getValues() { //Function for getting the values from the form (and also
       break;
     default:
       console.error("Fatal: Invalid error code");
+      alert("An error has occured. Check the conosle for details.")
+      isValid = false;
   }
   //no need to check if health issues are valid as the value is set by the software and not the user.
   if (isValid == true) {
@@ -122,6 +134,7 @@ function getValues() { //Function for getting the values from the form (and also
     lastNames.push(lastName);
     ages.push(age);
     hasHealthIssues.push(healthIssue);
+    showCost();
     drawTable();
     clearAllInputs();
   }
@@ -155,15 +168,18 @@ function verify(subject, type) {
         return(0); //return 0 if okay
       }
       break;
+
     default:
       console.error("Fatal: Data type '" + type + "' does not exist.");
+      alert("An error occured, check the console for details.")
       return(1);
   }
 }
 
-function calculateCosts(ages, healths) { // Takes list of ages and health issues and calulates cost
+function calculateCosts(ages, healths) { // Takes list of ages + health issues, calulates cost and returns
   if (ages.length != healths.length) {
     console.error("Fatal: Arrays do not match");
+    alert("An error occured, check the console for details.")
     return("ERROR");
   }
   var length = ages.length;
@@ -174,31 +190,66 @@ function calculateCosts(ages, healths) { // Takes list of ages and health issues
       cost = 0;
     case 1: //If one person
       cost = 500 * length;
+      for (var i = 0; i < length; i++) {
+        costs[i] = 500;
+      }
       break;
     case 2:
       cost = 450 * length;
+      for (var i = 0; i < length; i++) {
+        costs[i] = 450;
+      }
       break;
     case 3:
     case 4:
       cost = 430 * length;
+      for (var i = 0; i < length; i++) {
+        costs[i] = 430;
+      }
       break;
     case 5:
     case 6:
     case 7:
     case 8:
       cost = 400 * length;
+      for (var i = 0; i < length; i++) {
+        costs[i] = 400;
+      }
       break;
     default:
       cost = 390 * length;
+      for (var i = 0; i < length; i++) {
+        costs[i] = 390;
+      }
   }
+  for (var i = 0; i < healths.length; i++) {
+    if (healths[i] == true) {
+      cost += 50;
+      costs[i] += 50;
+    }
+  }
+  for (var i = 0; i < ages.length; i++) {
+    if (ages[i] <= 18) {
+      cost += 30;
+      costs[i] += 30;
+    }
+  }
+
+  for (var i = 0; i < costs.length; i++) {
+    costs[i] = costs[i] * 1.15
+    costs[i] = costs[i].toFixed(2);
+  }
+  cost = cost*1.15;
+  return(cost.toFixed(2));
 }
 
 function drawTable() {
   /* Table layout
-  Cell 0: number
+  Cell 0: number and remove
   Cell 1: name
   Cell 2: Ages
   Cell 3: Has health issues
+  Cell 4: Cost
   */
 
 
@@ -216,7 +267,7 @@ function drawTable() {
     var row = root.insertRow();
 
     var personCell = row.insertCell(0);
-    personCell.innerHTML = i+1;
+    personCell.innerHTML = i+1 + ' <button onclick="clearEntry(' + i + ');">Remove</button>';
 
     var nameCell = row.insertCell(1);
     nameCell.innerHTML = firstNames[i] + " " + lastNames[i];
@@ -232,10 +283,28 @@ function drawTable() {
       hasHealthIssuesCell.innerHTML = "No";
     }
 
+    var costCell = row.insertCell(4);
+    costCell.innerHTML = "$" + costs[i];
+
   }
 }
 
-function clearAllInputs() {
+function clearEntry(entry) {
+  firstNames.splice(entry,1);
+  lastNames.splice(entry,1);
+  ages.splice(entry,1);
+  hasHealthIssues.splice(entry,1);
+  costs.splice(entry,1);
+  showCost();
+  drawTable();
+}
+
+function showCost() { // Displays the cost including GST
+  var costElement = document.getElementById("totalCost")
+  costElement.innerHTML = calculateCosts(ages, hasHealthIssues);
+}
+
+function clearAllInputs() { // Clears the inputs
   for (var i = 0; i < inputs.length; i++) {
     document.getElementById(inputs[i]).value = "";
   }

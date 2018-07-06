@@ -15,7 +15,7 @@
     <input type="number" min="16" max="65" id="age">
     <p class="error" id="ageError"></p>
     <label>Do you have health issues?, </label>
-    <input id="radioNo" type="radio" name="diet" value="false" checked>No
+    <input id="radioNo" type="radio" name="diet" value="false" checked>No<br>
     <input id="radioYes" type="radio" name="diet" value="true">Yes
     <input type="button" value="Add Person" onclick="getValues()">
   </form>
@@ -27,8 +27,10 @@
       <th>Name</th>
       <th>Age</th>
       <th>Has Health Issues</th>
+      <th>Cost</th>
     </tr>
   </table>
+  <label>Total Cost (including GST): $<span id="totalCost">0</span></label>
 
 </body>
 
